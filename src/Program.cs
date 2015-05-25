@@ -127,16 +127,28 @@ namespace webProject
                     // checks whether the post or it's subject contain some of the key words
                     foreach ( string w in words )
                     {
-                        foreach ( string bad in badwords )
+                        if ( badwords.Count > 0 )
                         {
-                            // cannot check if the list already contains the OP in case that the key word was found in a reply
-                            // because of the format of a downloaded page
-                            if ( a.ToLower().Contains(w.ToLower()) && !toDownload.Contains(no) && ( !a.ToLower().Contains(bad.ToLower()) ) )
+                            foreach ( string bad in badwords )
+                            {
+                                // cannot check if the list already contains the OP in case that the key word was found in a reply
+                                // because of the format of a downloaded page
+                                if ( a.ToLower().Contains(w.ToLower()) && !toDownload.Contains(no) && ( !a.ToLower().Contains(bad.ToLower()) ) )
+                                {
+                                    foundWord = w;
+                                    toBeAdded = true;
+                                }
+                            }
+                        }
+                        else
+                        {
+                            if ( a.ToLower().Contains(w.ToLower()) && !toDownload.Contains(no) )
                             {
                                 foundWord = w;
                                 toBeAdded = true;
                             }
                         }
+
                     }
                 }
                 if ( a.Contains("\"resto\":") )
@@ -183,10 +195,14 @@ namespace webProject
             // press ENTER when you don't want to add any more parameters
             string input = Console.ReadLine();
             List<string> output = new List<string>();
-            while ( input.Length == 0 && !emptyList)
+            while ( input.Length == 0 && !emptyList )
             {
                 Console.WriteLine("You have to enter at least one parameter");
                 input = Console.ReadLine();
+            }
+            if ( input.Length == 0 )
+            {
+                return output;
             }
             output.Add(input);
             while ( input.Length > 0 )
